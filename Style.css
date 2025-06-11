@@ -37,14 +37,7 @@
       color: var(--primary);
       margin-top: 0;
     }
-    h4 {
-        color: Yellow;
-        border: 1px dotted Black;
-        text-decoration: italic;
-    .input-wrapper {
-      position: relative;
-      margin: 20px 0;
-    }
+ 
     input[type="time"] {
       width: 100%;
       padding: 12px;
