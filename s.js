@@ -80,29 +80,6 @@
       handleInput(document.getElementById("sleepTime"));
       handleInput(document.getElementById("wakeTime"));
     }
-  // Try feature detection
-  let isBlocked = false;
-
-  try {
-    new Function(""); // Simple eval test
-  } catch (e) {
-    isBlocked = true;
-    showWarning("Browser");
-  }
-
-  // Check for blocked script by timeout or extension behavior
-  setTimeout(() => {
-    if (typeof window.fetch !== "function") {
-      isBlocked = true;
-      showWarning(detectBrowser());
-    }
-  }, 1000);
-
-  function showWarning(blocker) {
-    document.getElementById("blocker-name").innerText = blocker;
-    document.getElementById("js-warning").style.display = "block";
-  }
-
   function detectBrowser() {
     const ua = navigator.userAgent;
     if (ua.includes("Firefox")) return "Firefox";
@@ -111,3 +88,24 @@
     if (ua.includes("Safari")) return "Safari";
     return "Unknown Browser";
   }
+
+  function showJSWarning(name) {
+    document.getElementById("blocker-name").innerText = name;
+    document.getElementById("js-warning").style.display = "block";
+  }
+
+  // Feature test — Detect if critical JS features are blocked
+  let blocked = false;
+  try {
+    new Function(""); // test eval permission
+  } catch (e) {
+    blocked = true;
+    showJSWarning("Browser");
+  }
+
+  setTimeout(() => {
+    if (typeof fetch !== "function") {
+      blocked = true;
+      showJSWarning(detectBrowser());
+    }
+  }, 800);
