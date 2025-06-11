@@ -80,32 +80,4 @@
       handleInput(document.getElementById("sleepTime"));
       handleInput(document.getElementById("wakeTime"));
     }
-  function detectBrowser() {
-    const ua = navigator.userAgent;
-    if (ua.includes("Firefox")) return "Firefox";
-    if (ua.includes("Edg")) return "Edge";
-    if (ua.includes("Chrome")) return "Chrome";
-    if (ua.includes("Safari")) return "Safari";
-    return "Unknown Browser";
-  }
-
-  function showJSWarning(name) {
-    document.getElementById("blocker-name").innerText = name;
-    document.getElementById("js-warning").style.display = "block";
-  }
-
-  // Feature test — Detect if critical JS features are blocked
-  let blocked = false;
-  try {
-    new Function(""); // test eval permission
-  } catch (e) {
-    blocked = true;
-    showJSWarning("Browser");
-  }
-
-  setTimeout(() => {
-    if (typeof fetch !== "function") {
-      blocked = true;
-      showJSWarning(detectBrowser());
-    }
-  }, 800);
+  
