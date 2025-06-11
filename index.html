@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WUTM – Wake Up Time Manager</title>
+  <style>
+    :root {
+      --bg: #141e30;
+      --fg: #ffffff;
+      --primary: #f5b921;
+      --card-bg: rgba(255, 255, 255, 0.08);
+    }
+    body.light {
+      --bg: #f5f5f5;
+      --fg: #000000;
+      --card-bg: rgba(0, 0, 0, 0.05);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      margin: 0;
+      transition: 0.3s;
+      
+    }
+    .container {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    h1 {
+      color: var(--primary);
+      margin-top: 0;
+    }
+    .input-wrapper {
+      position: relative;
+      margin: 20px 0;
+    }
+    input[type="time"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: #fff;
+      color: #000;
+    }
+    .placeholder-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      transition: 0.3s;
+      pointer-events: none;
+    }
+    input:focus + .placeholder-label,
+    input.filled + .placeholder-label {
+      opacity: 0;
+    }
+    button {
+      padding: 10px 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #000;
+      margin: 8px 4px;
+      cursor: pointer;
+    }
+    .output, .error {
+      margin-top: 15px;
+      font-size: 1.1rem;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .output {
+      background: rgba(0, 255, 0, 0.1);
+      animation: fadeIn 0.6s ease-in-out forwards;
+    }
+    .error {
+      color: red;
+      background: rgba(255, 0, 0, 0.1);
+      animation: pulse 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .switches {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #ccc;
+      border-radius: 34px;
+      transition: .4s;
+    }
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: .4s;
+    }
+    .toggle-switch input:checked + .slider {
+      background-color: #f5b921;
+    }
+    .toggle-switch input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+    .lang-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--primary);
+      cursor: pointer;
+    }
+    .note-label {
+      font-size: 0.9rem;
+      margin-bottom: -10px;
+      opacity: 0.8;
+    }
+    .selected-lang {
+      font-size: 0.9rem;
+      color: var(--primary);
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="title">🕒 WUTM</h1>
+    <p class="note-label" id="sleepNote">For Check Your Sleep Time Click Here 👇</p>
+
+    <div class="input-wrapper">
+      <input type="time" id="sleepTime" oninput="handleInput(this)" />
+      <label class="placeholder-label" id="sleepLabel">Select your sleep time</label>
+    </div>
+
+    <p class="note-label" id="wakeNote">For Check Your Wake Up Time Click Here 👇</p>
+    <div class="input-wrapper">
+      <input type="time" id="wakeTime" oninput="handleInput(this)" />
+      <label class="placeholder-label" id="wakeLabel">Select your wake-up time</label>
+    </div>
+
+    <button onclick="showWakeTime()" id="calcBtn">Check/Calculate Your Wake Up Time</button>
+    <button onclick="showSleepTime()" id="revBtn">Calculate/Check Your Sleep Time</button>
+    <button id="a08293" onclick="clearInputs()">🧹 Clear</button>
+
+    <div class="output" id="result"></div>
+    <div class="error" id="error"></div>
+
+    <div class="switches">
+      <div>Dark/Light Mode</div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleTheme()">
+        <span class="slider"></span>
+      </label>
+
+      <div>Language:</div>
+      <button class="lang-btn" onclick="toggleLang()" id="langBtn">हिंदी</button>
+      <div class="selected-lang" id="langStatus">You selected English</div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = "en";
+
+    function handleInput(input) {
+      input.classList.toggle("filled", input.value !== "");
+    }
+
+    function fixTime(hour, minute) {
+      const now = new Date();
+      const guessedDate = new Date();
+      guessedDate.setHours(hour, minute, 0, 0);
+      if (guessedDate < now) guessedDate.setHours(hour + 12, minute);
+      return guessedDate;
+    }
+
+    function showWakeTime() {
+      const input = document.getElementById("sleepTime").value;
+      const result = document.getElementById("result");
+      const error = document.getElementById("error");
+      result.innerHTML = '';
+      error.innerHTML = '';
+      if (!input) {
+        error.innerText = currentLang === "en" ? "Please select your sleep time." : "कृपया अपना सोने का समय चुनें।";
+        return;
+      }
+      let [h, m] = input.split(":").map(Number);  // ✅ FIXED
+      const sleepTime = fixTime(h, m);
+      const wakeTime = new Date(sleepTime.getTime() + (9 * 60 + 10) * 60000);
+      const formatted = wakeTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      result.innerHTML = currentLang === "en"
+        ? `🌞 <strong>Your Wake Up Time:</strong><br>⏰ ${formatted}`
+        : `🌞 <strong>आपका जागने का समय:</strong><br>⏰ ${formatted}`;
+    }
+
+    function showSleepTime() {
+      const input = document.getElementById("wakeTime").value;
+      const result = document.getElementById("result");
+      const error = document.getElementById("error");
+      result.innerHTML = '';
+      error.innerHTML = '';
+      if (!input) {
+        error.innerText = currentLang === "en" ? "Please select your wake-up time." : "कृपया अपना उठने का समय चुनें।";
+        return;
+      }
+      let [h, m] = input.split(":").map(Number);  // ✅ FIXED
+      const wakeTime = fixTime(h, m);
+      const sleepTime = new Date(wakeTime.getTime() - (9 * 60 + 10) * 60000);
+      const formatted = sleepTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      result.innerHTML = currentLang === "en"
+        ? `🌙 <strong>You should sleep at:</strong><br>🛏️ ${formatted}`
+        : `🌙 <strong>आपको इस समय सोना चाहिए:</strong><br>🛏️ ${formatted}`;
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === "en" ? "hi" : "en";
+      document.getElementById("title").innerText = currentLang === "en" ? "🕒 WUTM" : "🕒 उठो समय प्रबंधक";
+      document.getElementById("sleepLabel").innerText = currentLang === "en" ? "Select your sleep time" : "अपना सोने का समय चुनें";
+      document.getElementById("wakeLabel").innerText = currentLang === "en" ? "Select your wake-up time" : "अपना जागने का समय चुनें";
+      document.getElementById("calcBtn").innerText = currentLang === "en" ? "Check/Calculate Your Wake Up Time" : "अपना जागने का समय जांचें/गणना करें";
+      document.getElementById("revBtn").innerText = currentLang === "en" ? "Calculate/Check Your Sleep Time" : "अपना सोने का समय जांचें/गणना करें";
+      document.getElementById("langBtn").innerText = currentLang === "en" ? "हिंदी" : "English";
+      document.getElementById("langStatus").innerText = currentLang === "en" ? "You selected English" : "आपने हिंदी चुनी है";
+      document.getElementById("sleepNote").innerText = currentLang === "en" ? "For Check Your Sleep Time Click Here 👇" : "अपना सोने का समय जांचने के लिए यहां क्लिक करें 👇";
+      document.getElementById("a08293").innerText = currentLang === "en" ? "🧹 Clear" : "साफ करें 🧹";
+      document.getElementById("wakeNote").innerText = currentLang === "en" ? "For Check Your Wake Up Time Click Here 👇" : "अपना जागने का समय जांचने के लिए यहां क्लिक करें 👇";
+      if (document.getElementById("result").innerHTML) {
+        if (document.getElementById("sleepTime").value) showWakeTime();
+        else if (document.getElementById("wakeTime").value) showSleepTime();
+      }
+    }
+
+    function clearInputs() {
+      document.getElementById("sleepTime").value = "";
+      document.getElementById("wakeTime").value = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("error").innerHTML = "";
+      handleInput(document.getElementById("sleepTime"));
+      handleInput(document.getElementById("wakeTime"));
+    }
+  </script>
+</body>
+    </html>
