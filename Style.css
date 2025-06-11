@@ -164,11 +164,41 @@
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: red;
+      background: #ff3c3c;
       color: white;
-      padding: 15px;
+      padding: 20px 25px;
       font-size: 18px;
+      border-radius: 12px;
       z-index: 9999;
-      border-radius: 10px;
-}
- 
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
+
+    #js-warning span {
+      font-weight: bold;
+    }
+
+    #js-warning .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+    }
+
+    /* For noscript fallback styling */
+    #noscript-warning {
+      background: #ff3c3c;
+      color: white;
+      padding: 20px 25px;
+      font-size: 18px;
+      font-family: sans-serif;
+      border-radius: 12px;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
