@@ -47,10 +47,16 @@
 
 </body>
     </html>
+<!-- NoScript Warning (if JS is disabled) -->
 <noscript>
-  <div style="background: red; color: white; padding: 20px; font-size: 18px;">
-    The User Your <b>Browser</b> Block the JS and Website Not Work Properly
+  <div id="noscript-warning">
+    <div class="close-btn" onclick="this.parentElement.style.display='none';">✖</div>
+    The User Your <span>Browser</span> Block the JS and Website Not Work Properly
   </div>
 </noscript>
 
-<div id="js-warning">The User Your <span id="blocker-name">Unknown</span> Block the JS and Website Not Work Properly</div>
+<!-- JavaScript Warning -->
+<div id="js-warning">
+  <div class="close-btn" onclick="document.getElementById('js-warning').style.display='none';">✖</div>
+  The User Your <span id="blocker-name">Unknown</span> Block the JS and Website Not Work Properly
+</div>
