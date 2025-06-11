@@ -80,3 +80,34 @@
       handleInput(document.getElementById("sleepTime"));
       handleInput(document.getElementById("wakeTime"));
     }
+  // Try feature detection
+  let isBlocked = false;
+
+  try {
+    new Function(""); // Simple eval test
+  } catch (e) {
+    isBlocked = true;
+    showWarning("Browser");
+  }
+
+  // Check for blocked script by timeout or extension behavior
+  setTimeout(() => {
+    if (typeof window.fetch !== "function") {
+      isBlocked = true;
+      showWarning(detectBrowser());
+    }
+  }, 1000);
+
+  function showWarning(blocker) {
+    document.getElementById("blocker-name").innerText = blocker;
+    document.getElementById("js-warning").style.display = "block";
+  }
+
+  function detectBrowser() {
+    const ua = navigator.userAgent;
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Edg")) return "Edge";
+    if (ua.includes("Chrome")) return "Chrome";
+    if (ua.includes("Safari")) return "Safari";
+    return "Unknown Browser";
+  }
