@@ -1,3 +1,4 @@
+
     let currentLang = "en";
 
     function handleInput(input) {
@@ -80,4 +81,3 @@
       handleInput(document.getElementById("sleepTime"));
       handleInput(document.getElementById("wakeTime"));
     }
-  
